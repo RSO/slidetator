@@ -11,6 +11,12 @@ module.exports = function(grunt) {
         '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
         ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
     },
+    coffee: {
+      app: {
+        src: ['src/*.coffee'],
+        dest: 'src/'
+      }
+    },
     concat: {
       dist: {
         src: ['<banner:meta.banner>', '<file_strip_banner:src/<%= pkg.name %>.js>'],
@@ -30,8 +36,8 @@ module.exports = function(grunt) {
       files: ['grunt.js', 'src/**/*.js', 'test/**/*.js']
     },
     watch: {
-      files: '<config:lint.files>',
-      tasks: 'lint qunit'
+      files: '<config:coffee.app.src>',
+      tasks: 'coffee lint qunit'
     },
     jshint: {
       options: {
@@ -54,7 +60,9 @@ module.exports = function(grunt) {
     uglify: {}
   });
 
+  grunt.loadNpmTasks('grunt-coffee');
+
   // Default task.
-  grunt.registerTask('default', 'lint qunit concat min');
+  grunt.registerTask('default', 'coffee lint qunit concat min');
 
 };
