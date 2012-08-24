@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SlideTator examples</title>
+    <script type="text/javascript" src="../libs/jquery/jquery.js"></script>
+    <script type="text/javascript" src="../dist/slidetator.js"></script>
+
+    <style type="text/css">
+      a {
+        line-height: 100px;
+        cursor: pointer;
+        margin: 0 15px;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .previous {
+        float: left;
+      }
+
+      ul {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        width: 100px;
+        height: 100px;
+      }
+
+      .slide {
+        display: inline-block;
+        width: 100px;
+        line-height: 100px;
+        text-align: center;
+        background: red;
+        color: #fff;
+        position: absolute;
+      }
+
+      .slide:nth-child(3n+2) {
+        background: green;
+      }
+
+      .slide:nth-child(3n+3) {
+        background: yellow;
+        color: #000;
+      }
+
+      .slide .ribbon {
+        display: none;
+      }
+
+      .dest_ribbon {
+        border: 1px solid red;
+        width: 300px;
+        text-align: center;
+        height: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>First test</h1>
+
+    <div id="slidetator">
+      <ul>
+        <li class="slide">
+          1
+          <div class="ribbon">Ribbon 1</div>
+        </li>
+        <li class="slide">
+          2
+          <div class="ribbon">Ribbon 2</div>
+        </li>
+        <li class="slide">
+          3
+          <div class="ribbon">Ribbon 3</div>
+        </li>
+        <li class="slide">
+          4
+          <div class="ribbon">Ribbon 4</div>
+        </li>
+        <li class="slide">
+          5
+          <div class="ribbon">Ribbon 5</div>
+        </li>
+        <li class="slide">
+          6
+          <div class="ribbon">Ribbon 6</div>
+        </li>
+
+      </ul>
+      <a class="next">Next!</a>
+      <a class="previous">Previous!</a>
+
+      <div class="dest_ribbon">
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var slidetator = new SlideTator({
+        container: $('#slidetator'),
+        previous_button: ".previous",
+        next_button: ".next",
+        slides: ".slide",
+        slide_view: FadingSlideView,
+        regions: [
+          {
+            selector: ".ribbon",
+            dest: ".dest_ribbon"
+          }
+        ]
+      });
+    </script>
+  </body>
+</html>
