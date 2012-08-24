@@ -37,7 +37,7 @@ module.exports = function(grunt) {
     },
     watch: {
       files: '<config:coffee.app.src>',
-      tasks: 'coffee lint qunit'
+      tasks: 'coffee concat'
     },
     jshint: {
       options: {
@@ -64,6 +64,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-coffee');
 
   // Default task.
-  grunt.registerTask('default', 'coffee lint qunit concat min');
+  grunt.registerTask('default', 'coffee concat min');
 
 };
