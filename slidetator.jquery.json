@@ -1,0 +1,33 @@
+{
+  "name": "slidetator",
+  "title": "SlideTator",
+  "description": "A JavaScript slider/rotator/carousel",
+  "version": "0.1.0",
+  "homepage": "https://github.com/vergil/slidetator",
+  "author": {
+    "name": "Remon Oldenbeuving",
+    "email": "remon@vergil.nl",
+    "url": "http://vergil.nl"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vergil/slidetator"
+  },
+  "bugs": {
+    "url": "https://github.com/vergil/slidetator/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/vergil/slidetator/blob/master/LICENSE-MIT"
+    },
+    {
+      "type": "GPL",
+      "url": "https://github.com/vergil/slidetator/blob/master/LICENSE-GPL"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">= 1.6"
+  },
+  "keywords": []
+}
