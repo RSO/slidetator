@@ -1,0 +1,2 @@
+class SlideTator
+  constructor: (@options) ->
