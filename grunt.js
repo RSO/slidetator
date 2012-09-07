@@ -14,12 +14,12 @@ module.exports = function(grunt) {
     coffee: {
       app: {
         src: ['src/*.coffee'],
-        dest: 'src/'
+        dest: 'tmp/'
       }
     },
     concat: {
       dist: {
-        src: ['<banner:meta.banner>', 'src/*.js'],
+        src: ['<banner:meta.banner>', 'tmp/*.js'],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
