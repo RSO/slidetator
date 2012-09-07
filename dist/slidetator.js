@@ -1,4 +1,4 @@
-/*! SlideTator - v0.1.0 - 2012-08-24
+/*! SlideTator - v0.1.0 - 2012-09-07
 * https://github.com/vergil/slidetator
 * Copyright (c) 2012 Remon Oldenbeuving; Licensed MIT, GPL */
 
@@ -14,28 +14,29 @@ DefaultSlideView = (function() {
     this.show(this.current);
   }
 
-  DefaultSlideView.prototype.next = function() {
+  DefaultSlideView.prototype.next = function(callback) {
     var next;
     next = this.current + 1;
     if (next > this.elements.length - 1) {
       next = 0;
     }
-    return this.show(next);
+    return this.show(next, callback);
   };
 
-  DefaultSlideView.prototype.previous = function() {
+  DefaultSlideView.prototype.previous = function(callback) {
     var previous;
     previous = this.current - 1;
     if (previous < 0) {
       previous = this.elements.length - 1;
     }
-    return this.show(previous);
+    return this.show(previous, callback);
   };
 
-  DefaultSlideView.prototype.show = function(id) {
+  DefaultSlideView.prototype.show = function(id, callback) {
     this.elements.hide().eq(id).show();
     this.current = id;
-    return this.showRegions();
+    this.showRegions();
+    return callback();
   };
 
   DefaultSlideView.prototype.showRegions = function() {
@@ -90,7 +91,7 @@ FadingSlideView = (function(_super) {
     this.showRegions();
   }
 
-  FadingSlideView.prototype.show = function(id) {
+  FadingSlideView.prototype.show = function(id, callback) {
     var current,
       _this = this;
     if (id === this.current) {
@@ -101,7 +102,8 @@ FadingSlideView = (function(_super) {
     current.siblings().css('z-index', 1);
     this.elements.eq(id).css('z-index', 2);
     current.fadeOut(function() {
-      return _this.elements.show().css('z-index', 1).eq(id).css('z-index', 2);
+      _this.elements.show().css('z-index', 1).eq(id).css('z-index', 2);
+      return callback();
     });
     this.current = id;
     return this.showRegions();
@@ -116,6 +118,7 @@ var SlideTator;
 SlideTator = (function() {
 
   function SlideTator(options) {
+    var _this = this;
     this.options = options;
     if (this.shouldBindButtons()) {
       this.bindPrevAndNextButtons();
@@ -123,6 +126,15 @@ SlideTator = (function() {
     this.current = 0;
     this.elements = this.getJQueryObject(this.options.slides);
     this.slideView = new this.options.slide_view(this.elements, this.current, this.options, this.getContainer());
+    if (this.options.auto_start === true) {
+      this.getContainer().on('mouseenter', function() {
+        return _this.stop();
+      });
+      this.getContainer().on('mouseleave', function() {
+        return _this.start();
+      });
+      this.start();
+    }
   }
 
   SlideTator.prototype.shouldBindButtons = function() {
@@ -135,10 +147,16 @@ SlideTator = (function() {
     previous_button = this.getJQueryObject(this.options.previous_button);
     next_button = this.getJQueryObject(this.options.next_button);
     previous_button.on('click', function() {
-      return _this.previous();
+      _this.stop();
+      return _this.previous(function() {
+        return _this.start();
+      });
     });
     return next_button.on('click', function() {
-      return _this.next();
+      _this.stop();
+      return _this.next(function() {
+        return _this.start();
+      });
     });
   };
 
@@ -153,12 +171,33 @@ SlideTator = (function() {
     return this.slideView.show(id);
   };
 
-  SlideTator.prototype.next = function() {
-    return this.slideView.next();
+  SlideTator.prototype.next = function(callback) {
+    return this.slideView.next(callback);
   };
 
-  SlideTator.prototype.previous = function() {
-    return this.slideView.previous();
+  SlideTator.prototype.previous = function(callback) {
+    return this.slideView.previous(callback);
+  };
+
+  SlideTator.prototype.start = function() {
+    if (this.started !== true) {
+      return this.run();
+    }
+  };
+
+  SlideTator.prototype.run = function() {
+    var _this = this;
+    this.started = true;
+    return this._timeOut = setTimeout((function() {
+      return _this.next(function() {
+        return _this.run();
+      });
+    }), this.options.delay);
+  };
+
+  SlideTator.prototype.stop = function() {
+    this.started = false;
+    return clearTimeout(this._timeOut);
   };
 
   SlideTator.prototype.getJQueryObject = function(element, relativeTo) {
