@@ -7,7 +7,13 @@ class SlideTator
 
     @elements = @getJQueryObject @options.slides
 
-    @slideView = new @options.slide_view @elements, @current, @options, @getContainer()
+    @slideView = new @options.slide_view(@elements, @current, @options, @getContainer())
+
+    if @options.auto_start is true
+      @getContainer().on 'mouseenter', => @stop()
+      @getContainer().on 'mouseleave', => @start()
+
+      @start()
 
   shouldBindButtons: ->
     "previous_button" of @options and "next_button" of @options
@@ -16,8 +22,13 @@ class SlideTator
     previous_button = @getJQueryObject @options.previous_button
     next_button = @getJQueryObject @options.next_button
 
-    previous_button.on 'click', => @previous()
-    next_button.on 'click', => @next()
+    previous_button.on 'click', =>
+      @stop()
+      @previous(=> @start())
+
+    next_button.on 'click', =>
+      @stop()
+      @next(=> @start())
 
   getContainer: ->
     if typeof @options.container is "string"
@@ -26,8 +37,20 @@ class SlideTator
     @options.container
 
   show: (id) -> @slideView.show id
-  next: -> @slideView.next()
-  previous: -> @slideView.previous()
+  next: (callback) -> @slideView.next( callback )
+  previous: (callback) -> @slideView.previous( callback )
+
+  start: ->
+    @run() unless @started is true
+
+  run: ->
+    @started = true
+
+    @_timeOut = setTimeout ( => @next( => @run() ) ), @options.delay
+
+  stop: ->
+    @started = false
+    clearTimeout @_timeOut
 
   getJQueryObject: (element, relativeTo) ->
     if typeof element is "string"

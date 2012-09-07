@@ -5,7 +5,7 @@ class FadingSlideView extends DefaultSlideView
 
     @showRegions()
 
-  show: (id) ->
+  show: (id, callback) ->
     if id is @current
       return
 
@@ -19,6 +19,8 @@ class FadingSlideView extends DefaultSlideView
 
     current.fadeOut =>
       @elements.show().css('z-index', 1).eq(id).css('z-index', 2)
+
+      callback()
 
     @current = id
 

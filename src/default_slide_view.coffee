@@ -2,28 +2,30 @@ class DefaultSlideView
   constructor: (@elements, @current, @options, @container) ->
     @show @current
 
-  next: ->
+  next: (callback) ->
     next = @current + 1
 
     if next > @elements.length - 1
       next = 0
 
-    @show next
+    @show next, callback
 
-  previous: ->
+  previous: (callback) ->
     previous = @current - 1
 
     if previous < 0
       previous = @elements.length - 1
 
-    @show previous
+    @show previous, callback
 
-  show: (id) ->
+  show: (id, callback) ->
     @elements.hide().eq(id).show()
 
     @current = id
 
     @showRegions()
+
+    callback()
 
   showRegions: ->
     @showRegion region for region in @options.regions
