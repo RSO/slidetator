@@ -1,26 +1,12 @@
-class FadingSlideView extends DefaultSlideView
-  constructor: (@elements, @current, @options, @container) ->
-    @elements.css 'z-index', 1
-    @elements.eq(@current).css 'z-index', 2
-
-    @showRegions()
-
+class FadingSlideView extends CrossFadingSlideView
   show: (id, callback) ->
     if id is @current
       return
 
     current = @elements.eq(@current)
 
-    current.css 'z-index', 3
-
-    current.siblings().css 'z-index', 1
-
-    @elements.eq(id).css 'z-index', 2
-
-    current.fadeOut =>
-      @elements.show().css('z-index', 1).eq(id).css('z-index', 2)
-
-      callback()
+    current.fadeOut @options.fade_out_time, =>
+      @elements.eq(id).fadeIn @options.fade_in_time, callback
 
     @current = id
 
