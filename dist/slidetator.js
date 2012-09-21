@@ -1,6 +1,114 @@
-/*! SlideTator - v0.1.0 - 2012-09-07
+/*! SlideTator - v0.1.0 - 2012-09-21
 * https://github.com/vergil/slidetator
 * Copyright (c) 2012 Remon Oldenbeuving; Licensed MIT, GPL */
+
+var DefaultSlideView;
+
+DefaultSlideView = (function() {
+
+  function DefaultSlideView(elements, current, options, container) {
+    this.elements = elements;
+    this.current = current;
+    this.options = options;
+    this.container = container;
+    this.show(this.current);
+  }
+
+  DefaultSlideView.prototype.next = function(callback) {
+    var next;
+    next = this.current + 1;
+    if (next > this.elements.length - 1) {
+      next = 0;
+    }
+    return this.show(next, callback);
+  };
+
+  DefaultSlideView.prototype.previous = function(callback) {
+    var previous;
+    previous = this.current - 1;
+    if (previous < 0) {
+      previous = this.elements.length - 1;
+    }
+    return this.show(previous, callback);
+  };
+
+  DefaultSlideView.prototype.show = function(id, callback) {
+    this.elements.hide().eq(id).show();
+    this.current = id;
+    this.showRegions();
+    return callback();
+  };
+
+  DefaultSlideView.prototype.showRegions = function() {
+    var region, _i, _len, _ref, _results;
+    _ref = this.options.regions;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      region = _ref[_i];
+      _results.push(this.showRegion(region));
+    }
+    return _results;
+  };
+
+  DefaultSlideView.prototype.showRegion = function(region) {
+    var current, dest, subject;
+    current = this.elements.eq(this.current);
+    dest = this.getJQueryObject(region.dest, this.container);
+    subject = this.getJQueryObject(region.selector, current);
+    console.info(dest, subject);
+    return dest.html(subject.html());
+  };
+
+  DefaultSlideView.prototype.getJQueryObject = function(element, relativeTo) {
+    if (typeof element === "string") {
+      return (relativeTo || $()).find(element);
+    } else if (element instanceof jQuery) {
+      return element;
+    } else {
+      return jQuery(element);
+    }
+  };
+
+  return DefaultSlideView;
+
+})();
+
+var CrossFadingSlideView,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+CrossFadingSlideView = (function(_super) {
+
+  __extends(CrossFadingSlideView, _super);
+
+  function CrossFadingSlideView(elements, current, options, container) {
+    this.elements = elements;
+    this.current = current;
+    this.options = options;
+    this.container = container;
+    this.elements.eq(this.current).siblings().css('display', 'none');
+    this.showRegions();
+  }
+
+  CrossFadingSlideView.prototype.show = function(id, callback) {
+    var current;
+    if (id === this.current) {
+      return;
+    }
+    current = this.elements.eq(this.current);
+    current.css('z-index', 2);
+    this.elements.eq(id).css({
+      'z-index': 1,
+      'display': 'block'
+    });
+    current.fadeOut(callback);
+    this.current = id;
+    return this.showRegions();
+  };
+
+  return CrossFadingSlideView;
+
+})(DefaultSlideView);
 
 var DefaultSlideView;
 
@@ -81,14 +189,8 @@ FadingSlideView = (function(_super) {
 
   __extends(FadingSlideView, _super);
 
-  function FadingSlideView(elements, current, options, container) {
-    this.elements = elements;
-    this.current = current;
-    this.options = options;
-    this.container = container;
-    this.elements.css('z-index', 1);
-    this.elements.eq(this.current).css('z-index', 2);
-    this.showRegions();
+  function FadingSlideView() {
+    return FadingSlideView.__super__.constructor.apply(this, arguments);
   }
 
   FadingSlideView.prototype.show = function(id, callback) {
@@ -98,12 +200,8 @@ FadingSlideView = (function(_super) {
       return;
     }
     current = this.elements.eq(this.current);
-    current.css('z-index', 3);
-    current.siblings().css('z-index', 1);
-    this.elements.eq(id).css('z-index', 2);
-    current.fadeOut(function() {
-      _this.elements.show().css('z-index', 1).eq(id).css('z-index', 2);
-      return callback();
+    current.fadeOut(this.options.fade_out_time, function() {
+      return _this.elements.eq(id).fadeIn(_this.options.fade_in_time, callback);
     });
     this.current = id;
     return this.showRegions();
@@ -111,7 +209,7 @@ FadingSlideView = (function(_super) {
 
   return FadingSlideView;
 
-})(DefaultSlideView);
+})(CrossFadingSlideView);
 
 var SlideTator;
 
