@@ -19,3 +19,5 @@ class CrossFadingSlideView extends DefaultSlideView
     @current = id
 
     @showRegions()
+
+    @updateActiveClasses()

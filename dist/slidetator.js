@@ -14,29 +14,45 @@ DefaultSlideView = (function() {
     this.show(this.current);
   }
 
-  DefaultSlideView.prototype.next = function(callback) {
+  DefaultSlideView.prototype.nextIndex = function() {
     var next;
     next = this.current + 1;
     if (next > this.elements.length - 1) {
       next = 0;
     }
-    return this.show(next, callback);
+    return next;
   };
 
-  DefaultSlideView.prototype.previous = function(callback) {
+  DefaultSlideView.prototype.previousIndex = function() {
     var previous;
     previous = this.current - 1;
     if (previous < 0) {
       previous = this.elements.length - 1;
     }
-    return this.show(previous, callback);
+    return previous;
+  };
+
+  DefaultSlideView.prototype.next = function(callback) {
+    return this.show(this.nextIndex(), callback);
+  };
+
+  DefaultSlideView.prototype.previous = function(callback) {
+    return this.show(this.previousIndex(), callback);
   };
 
   DefaultSlideView.prototype.show = function(id, callback) {
     this.elements.hide().eq(id).show();
     this.current = id;
     this.showRegions();
+    this.updateActiveClasses();
     return callback();
+  };
+
+  DefaultSlideView.prototype.updateActiveClasses = function() {
+    this.elements.removeClass('next current previous');
+    this.elements.eq(this.nextIndex()).addClass('next');
+    this.elements.eq(this.previousIndex()).addClass('previous');
+    return this.elements.eq(this.current).addClass('current');
   };
 
   DefaultSlideView.prototype.showRegions = function() {
@@ -103,7 +119,8 @@ CrossFadingSlideView = (function(_super) {
     });
     current.fadeOut(callback);
     this.current = id;
-    return this.showRegions();
+    this.showRegions();
+    return this.updateActiveClasses();
   };
 
   return CrossFadingSlideView;
@@ -133,7 +150,8 @@ FadingSlideView = (function(_super) {
       return _this.elements.eq(id).fadeIn(_this.options.fade_in_time, callback);
     });
     this.current = id;
-    return this.showRegions();
+    this.showRegions();
+    return this.updateActiveClasses();
   };
 
   return FadingSlideView;

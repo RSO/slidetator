@@ -11,3 +11,5 @@ class FadingSlideView extends CrossFadingSlideView
     @current = id
 
     @showRegions()
+
+    @updateActiveClasses()
