@@ -2,11 +2,11 @@
   "name": "slidetator",
   "title": "SlideTator",
   "description": "A JavaScript slider/rotator/carousel",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/vergil/slidetator",
   "author": {
-    "name": "Remon Oldenbeuving",
-    "email": "remon@vergil.nl",
+    "name": "Remon Oldenbeuving, Mark Haasjes",
+    "email": "remon@vergil.nl, mark@vergil.nl",
     "url": "http://vergil.nl"
   },
   "repository": {

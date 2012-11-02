@@ -1,6 +1,6 @@
-/*! SlideTator - v0.1.0 - 2012-11-02
+/*! SlideTator - v0.2.0 - 2012-11-02
 * https://github.com/vergil/slidetator
-* Copyright (c) 2012 Remon Oldenbeuving; Licensed MIT, GPL */
+* Copyright (c) 2012 Remon Oldenbeuving, Mark Haasjes; Licensed MIT, GPL */
 
 var DefaultSlideView;
 
