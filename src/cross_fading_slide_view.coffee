@@ -14,7 +14,7 @@ class CrossFadingSlideView extends DefaultSlideView
 
     @elements.eq(id).css 'z-index': 1, 'display': 'block'
 
-    current.fadeOut(callback)
+    current.fadeOut(@options.fade_out_time, callback)
 
     @current = id
 

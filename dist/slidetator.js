@@ -117,7 +117,7 @@ CrossFadingSlideView = (function(_super) {
       'z-index': 1,
       'display': 'block'
     });
-    current.fadeOut(callback);
+    current.fadeOut(this.options.fade_out_time, callback);
     this.current = id;
     this.showRegions();
     return this.updateActiveClasses();
