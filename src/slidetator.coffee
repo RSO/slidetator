@@ -39,16 +39,16 @@ class SlideTator
   show: (id) ->
     @slideView.show id
   next: (callback) ->
-    @getContainer().trigger('before:show')
+    @getContainer().trigger('before:show', 'next')
 
     @slideView.next =>
-      @getContainer().trigger('after:show')
+      @getContainer().trigger('after:show', 'next')
       callback()
   previous: (callback) ->
-    @getContainer().trigger('before:show')
+    @getContainer().trigger('before:show', 'previous')
 
     @slideView.previous =>
-      @getContainer().trigger('after:show')
+      @getContainer().trigger('after:show', 'previous')
       callback()
 
   start: ->

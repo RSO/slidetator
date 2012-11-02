@@ -218,18 +218,18 @@ SlideTator = (function() {
 
   SlideTator.prototype.next = function(callback) {
     var _this = this;
-    this.getContainer().trigger('before:show');
+    this.getContainer().trigger('before:show', 'next');
     return this.slideView.next(function() {
-      _this.getContainer().trigger('after:show');
+      _this.getContainer().trigger('after:show', 'next');
       return callback();
     });
   };
 
   SlideTator.prototype.previous = function(callback) {
     var _this = this;
-    this.getContainer().trigger('before:show');
+    this.getContainer().trigger('before:show', 'previous');
     return this.slideView.previous(function() {
-      _this.getContainer().trigger('after:show');
+      _this.getContainer().trigger('after:show', 'previous');
       return callback();
     });
   };
