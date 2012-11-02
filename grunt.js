@@ -37,7 +37,7 @@ module.exports = function(grunt) {
     },
     watch: {
       files: '<config:coffee.app.src>',
-      tasks: 'coffee concat'
+      tasks: 'coffee concat min'
     },
     jshint: {
       options: {
