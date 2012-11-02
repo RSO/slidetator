@@ -1,4 +1,4 @@
-/*! SlideTator - v0.1.0 - 2012-09-21
+/*! SlideTator - v0.1.0 - 2012-11-02
 * https://github.com/vergil/slidetator
 * Copyright (c) 2012 Remon Oldenbeuving; Licensed MIT, GPL */
 
@@ -110,77 +110,6 @@ CrossFadingSlideView = (function(_super) {
 
 })(DefaultSlideView);
 
-var DefaultSlideView;
-
-DefaultSlideView = (function() {
-
-  function DefaultSlideView(elements, current, options, container) {
-    this.elements = elements;
-    this.current = current;
-    this.options = options;
-    this.container = container;
-    this.show(this.current);
-  }
-
-  DefaultSlideView.prototype.next = function(callback) {
-    var next;
-    next = this.current + 1;
-    if (next > this.elements.length - 1) {
-      next = 0;
-    }
-    return this.show(next, callback);
-  };
-
-  DefaultSlideView.prototype.previous = function(callback) {
-    var previous;
-    previous = this.current - 1;
-    if (previous < 0) {
-      previous = this.elements.length - 1;
-    }
-    return this.show(previous, callback);
-  };
-
-  DefaultSlideView.prototype.show = function(id, callback) {
-    this.elements.hide().eq(id).show();
-    this.current = id;
-    this.showRegions();
-    return callback();
-  };
-
-  DefaultSlideView.prototype.showRegions = function() {
-    var region, _i, _len, _ref, _results;
-    _ref = this.options.regions;
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      region = _ref[_i];
-      _results.push(this.showRegion(region));
-    }
-    return _results;
-  };
-
-  DefaultSlideView.prototype.showRegion = function(region) {
-    var current, dest, subject;
-    current = this.elements.eq(this.current);
-    dest = this.getJQueryObject(region.dest, this.container);
-    subject = this.getJQueryObject(region.selector, current);
-    console.info(dest, subject);
-    return dest.html(subject.html());
-  };
-
-  DefaultSlideView.prototype.getJQueryObject = function(element, relativeTo) {
-    if (typeof element === "string") {
-      return (relativeTo || $()).find(element);
-    } else if (element instanceof jQuery) {
-      return element;
-    } else {
-      return jQuery(element);
-    }
-  };
-
-  return DefaultSlideView;
-
-})();
-
 var FadingSlideView,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -270,11 +199,21 @@ SlideTator = (function() {
   };
 
   SlideTator.prototype.next = function(callback) {
-    return this.slideView.next(callback);
+    var _this = this;
+    this.getContainer().trigger('before:show');
+    return this.slideView.next(function() {
+      _this.getContainer().trigger('after:show');
+      return callback();
+    });
   };
 
   SlideTator.prototype.previous = function(callback) {
-    return this.slideView.previous(callback);
+    var _this = this;
+    this.getContainer().trigger('before:show');
+    return this.slideView.previous(function() {
+      _this.getContainer().trigger('after:show');
+      return callback();
+    });
   };
 
   SlideTator.prototype.start = function() {

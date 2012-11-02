@@ -117,6 +117,12 @@
           }
         ]
       });
+
+      $('#slidetator').on('before:show', function () {
+        console.info( "Before:show" );
+      }).on('after:show', function() {
+        console.info( "After:show" );
+      });
     </script>
   </body>
 </html>

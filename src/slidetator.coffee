@@ -36,9 +36,20 @@ class SlideTator
 
     @options.container
 
-  show: (id) -> @slideView.show id
-  next: (callback) -> @slideView.next( callback )
-  previous: (callback) -> @slideView.previous( callback )
+  show: (id) ->
+    @slideView.show id
+  next: (callback) ->
+    @getContainer().trigger('before:show')
+
+    @slideView.next =>
+      @getContainer().trigger('after:show')
+      callback()
+  previous: (callback) ->
+    @getContainer().trigger('before:show')
+
+    @slideView.previous =>
+      @getContainer().trigger('after:show')
+      callback()
 
   start: ->
     @run() unless @started is true
